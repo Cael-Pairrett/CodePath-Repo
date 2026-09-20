@@ -14,7 +14,7 @@ Two parts. Staff wrote the first; you write the second.
 
 Only issues in the course's Path Review repository are candidates:
 
-- Repo: `<ORG>/<PATH-REVIEW-REPO>` <!-- paste your section's repo from the Unit 1 Check-In page -->
+- Repo: `codepath/pathreview-ai301-fa26-s1`
 
 Do not search, fetch, or grade issues from any other repository, however
 promising. The wider GitHub comes later in the course; for now the field
@@ -36,4 +36,11 @@ you want to avoid. The skill uses this only to RANK the issues your
 rubric accepts, never to change a verdict: fit cannot rescue an issue
 your rubric rejects, and cannot sink one it accepts. -->
 
-(Write a few sentences here.)
+New to open-source contribution. Comfortable with Python and everyday dev
+tooling (env files, README-style docs, basic git/GitHub workflow); less
+experience with this repo's FastAPI internals and its RAG/retrieval
+stack specifically. For a first issue I want to get the claim -> PR ->
+review loop right before taking on anything that requires deep
+familiarity with a subsystem I haven't touched yet, so I'd rather start
+with something config- or docs-shaped than a fix buried in retrieval or
+async test-mocking code.

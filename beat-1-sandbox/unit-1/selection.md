@@ -15,23 +15,83 @@ wrong label is not graded.
 
 **Issue link**
 
-[The individual Path Review issue page. A link to the repository or the issue list
-does not satisfy this field.]
+https://github.com/codepath/pathreview-ai301-fa26-s1/issues/73
 
 **Verdict output**
 
-[Your skill's live-mode output for this issue, pasted verbatim and ending with the
-fenced JSON verdict block. A summary does not satisfy this field.]
+Live-mode run of the installed `issue-select` skill (`~/.claude/skills/issue-select/`)
+on three candidate issues from `codepath/pathreview-ai301-fa26-s1`, per `scope.md`:
+
+````
+Accepted candidates, in fit order:
+
+1. #73 — README and .env.example disagree about which LLM API key to set
+   Fit: my profile says to start with something config/docs-shaped rather than a fix
+   buried in a subsystem I haven't touched yet; this is exactly that — no retrieval,
+   security, or async-test internals, just aligning two files' documented API key
+   names.
+
+2. #72 — verify_password raises UnknownHashError instead of returning False
+   Fit: touches core/security.py logic (one function, one xfail test to un-mark), a
+   step up from #73 in that it's real backend code, but still small and self-contained.
+
+3. #68 — KeywordSearcher.index() raises ZeroDivisionError on an empty corpus
+   Fit: accepted, but lowest fit for me right now — it's in the RAG/retrieval stack,
+   which my profile flags as the internals I have the least familiarity with, and it
+   carries the largest estimated effort (2-4h vs 1-2h) of the three.
+
+Rejected candidates: none — all three passed every required check.
+
+```json
+[
+  {
+    "item": "https://github.com/codepath/pathreview-ai301-fa26-s1/issues/73",
+    "checks": [
+      {"name": "maintainer-alive", "grade": "pass", "evidence": "Aburke225 (repo maintainer) committed to main on 2026-09-16, 4 days before this run"},
+      {"name": "repo-in-use", "grade": "pass", "evidence": "not archived; last push to main on 2026-09-16"},
+      {"name": "bounded-scope", "grade": "pass", "evidence": "single stated goal (align README and .env.example on the LLM API key name), estimated effort 1-2 hours, no umbrella/design-debate/abandoned-PR signals"},
+      {"name": "unclaimed", "grade": "pass", "evidence": "assignees: none; linked PRs: none; comments: none"},
+      {"name": "ai-contribution-allowed", "grade": "pass", "evidence": "docs/CONTRIBUTING.md states no AI-contribution policy; silence passes"},
+      {"name": "good-first-issue-label", "grade": "pass", "evidence": "labeled 'good first issue' and 'tier-1'"},
+      {"name": "maintainer-endorsed", "grade": "pass", "evidence": "opened by Aburke225, the repo's maintainer"}
+    ],
+    "verdict": "accept"
+  },
+  {
+    "item": "https://github.com/codepath/pathreview-ai301-fa26-s1/issues/72",
+    "checks": [
+      {"name": "maintainer-alive", "grade": "pass", "evidence": "same repo, last maintainer commit 2026-09-16"},
+      {"name": "repo-in-use", "grade": "pass", "evidence": "not archived; last push 2026-09-16"},
+      {"name": "bounded-scope", "grade": "pass", "evidence": "single function fix in core/security.py plus un-xfailing one named test, estimated 1-2 hours"},
+      {"name": "unclaimed", "grade": "pass", "evidence": "assignees: none; linked PRs: none; comments: none"},
+      {"name": "ai-contribution-allowed", "grade": "pass", "evidence": "no stated AI policy in CONTRIBUTING.md"},
+      {"name": "good-first-issue-label", "grade": "pass", "evidence": "labeled 'good first issue' and 'tier-1'"},
+      {"name": "maintainer-endorsed", "grade": "pass", "evidence": "opened by Aburke225, the repo's maintainer"}
+    ],
+    "verdict": "accept"
+  },
+  {
+    "item": "https://github.com/codepath/pathreview-ai301-fa26-s1/issues/68",
+    "checks": [
+      {"name": "maintainer-alive", "grade": "pass", "evidence": "same repo, last maintainer commit 2026-09-16"},
+      {"name": "repo-in-use", "grade": "pass", "evidence": "not archived; last push 2026-09-16"},
+      {"name": "bounded-scope", "grade": "pass", "evidence": "single method fix (KeywordSearcher.index()) across two named files, estimated 2-4 hours"},
+      {"name": "unclaimed", "grade": "pass", "evidence": "assignees: none; linked PRs: none; comments: none"},
+      {"name": "ai-contribution-allowed", "grade": "pass", "evidence": "no stated AI policy in CONTRIBUTING.md"},
+      {"name": "good-first-issue-label", "grade": "pass", "evidence": "labeled 'good first issue' and 'tier-1'"},
+      {"name": "maintainer-endorsed", "grade": "pass", "evidence": "opened by Aburke225, the repo's maintainer"}
+    ],
+    "verdict": "accept"
+  }
+]
+```
+````
 
 **The verdict must record `accept` for this issue.** Choose an issue your own skill
 accepts. If your skill rejects every candidate you try, that is a signal about your
 rubric rather than about the issues: revise it and re-run — retries are unlimited and a
 partial re-run costs about $0.20 — or run the skill on different candidates. Output
 recording `reject` for the issue you chose earns no credit for this field.
-
-```
-paste the output here, including the closing JSON block
-```
 
 ---
 
@@ -120,14 +180,29 @@ Graded on whether all three are answered, in your own words. Not on how good the
 reasoning is, and not on length — a short honest answer to each earns the full marks.
 This is also the basis for the claim comment you write in Unit 2.
 
+<!-- DRAFTED FOR REVIEW: written from a generic fit profile since I hadn't given
+specific notes. Read it, and edit anything that doesn't sound like me before
+submitting. -->
+
 **Selection rationale**
 
-[Answer all three:
-
-1. The issue's fit to your interests and to the time available.
-2. What the verdict identified correctly, and what you weighed that the rubric could
-   not.
-3. The anticipated difficulty in claiming it.]
+1. I'm new to contributing to a codebase I didn't write, so a first issue that's
+   about fixing a factual inconsistency (README vs. `.env.example`) rather than
+   changing behavior fits where I actually am right now, and it fits comfortably
+   inside an hour or two alongside everything else due this week.
+2. The verdict's `unclaimed` and `maintainer-alive` checks confirmed something I
+   couldn't have judged just by reading the issue body — that nobody else had
+   already commented or opened a PR against it, and that the repo had a real commit
+   four days ago rather than sitting idle. What I weighed on top of that (the rubric
+   can rank preferred checks but can't feel it) was that #72 and #68 were both also
+   accepted and technically more interesting, but as a genuine first PR I'd rather
+   bank a small, easy win in this repo's actual review process before taking on
+   security- or retrieval-code logic I haven't touched yet.
+3. Low difficulty expected: no assignee or existing PR to race, the fix is a
+   two-file text change with no ambiguity about what "correct" looks like (the
+   README and `.env.example` just need to agree, and `core/config.py` already
+   supports both key names), and the Path Review house rule means even if a
+   classmate also comments on it, claiming it costs nothing.
 
 ---
 
