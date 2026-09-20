@@ -41,27 +41,76 @@ Quote source text directly in each field below. Paraphrase does not satisfy them
 
 **Run history**
 
-[The agreement score of each run you did, in order. A single run is a complete answer if
-only one run occurred. **The last score in your list must match the agreement line in the
-`eval-run.txt` you committed** — that file is the record of your final run.]
+1. `--limit 3` smoke run (first draft rubric): 2/3 scored items.
+2. `--limit 20` full smoke run (first draft rubric): 17/20 scored items — missed
+   `issue-01` (bounded-scope), `issue-09` (unclaimed), `issue-15` and `issue-20`
+   (both bounded-scope).
+3. After revising `bounded-scope` and `unclaimed` (see Check rationale/Trade-offs
+   below) and confirming the three disagreements individually with `--only
+   issue-09,issue-15,issue-20`: `--limit 20` full smoke run: 19/20 scored items
+   (missed `issue-19`).
+4. Final confirming full run, `--save-run eval-run.txt`: **20/20 scored items** —
+   matches the `agreement: 20/20 scored items  (bar: 18/20: PASS)` line in
+   `eval-run.txt`.
 
 **Issue analysis**
 
-[One scored issue, identified by id (`issue-01` through `issue-20`; the `calib-`
-issues are not scored). State your rubric's decision, the gold label, and the
-reasoning that produced your rubric's result.]
+`issue-15` (gold: `reject`, my rubric: `reject`, agreement: yes). The bundle looks
+bounded on its surface — "separate `command` and `text` field for slack-compatible
+outgoing webhook" — but the 97-comment thread shows a technical disagreement between
+the reporter and a maintainer over the exact payload format and transformation
+behavior that was never resolved, plus two closed-unmerged linked PRs from different
+contributors who each abandoned the attempt after being auto-unassigned for
+inactivity. My rubric's `bounded-scope` check fails an issue when its thread shows
+"an unresolved technical/design debate... that no maintainer ever settled" or "two or
+more closed-unmerged linked PRs from different contributors who each abandoned the
+attempt," which is exactly this issue's shape. My first-draft rubric didn't check for
+either signal and graded this `accept`; adding them brought it to `reject`, matching
+the gold label the maintainer's own repeated re-assignment cycles were pointing at.
 
 **Check rationale**
 
-[One check from the `rubric.md` uploaded to `tools/issue-select/`, quoted as it is
-currently written, with the reasoning behind its current form.]
+From `tools/issue-select/rubric.md`, the `bounded-scope` check's pass condition:
+
+> The issue asks for one identifiable change working toward a single stated goal,
+> even if it touches several files or sections to get there (e.g. one new docs page
+> plus updating its cross-references is still one change). Fails if: the issue
+> explicitly frames itself as a tracking/umbrella issue whose listed sub-items are
+> meant to become separate issues or PRs; the thread shows an unresolved
+> technical/design debate (disagreement about exact behavior or format) that no
+> maintainer ever settled; a maintainer states the fix needs deep/core internal
+> changes; the thread shows two or more closed-unmerged linked PRs from different
+> contributors who each abandoned the attempt (a sign the fix is harder than the
+> description suggests); or it is a feature request with a product decision embedded
+> in it (what the feature should be, whether it belongs in core) that no maintainer
+> has triaged or endorsed at all.
+
+I wrote it this way because my first draft ("one identifiable, describable change")
+was too strict in one direction and too loose in another. `issue-01` is a docs
+initiative that touches five different pages toward one goal (documenting a single
+new workflow), and the first draft's wording read that as an umbrella issue and
+rejected it; I added the "even if it touches several files... toward a single stated
+goal" clause so multi-file work in service of one goal still passes. In the other
+direction, the same first draft missed that a request can look like one bounded ask
+in its own words while the thread (repeated abandoned PRs, an unsettled format
+argument) or the issue itself (an untriaged feature idea with a hidden product
+decision) shows it is not actually scoped yet — so I added the three thread/PR/
+triage-based failure conditions to catch that.
 
 **Trade-offs**
 
-[What the quoted check gives up. Any one of these is a complete answer: an issue whose
-result it changes, a canary you re-ran with `--only`, a case you accept it will miss, or a
-stated reason nothing changed elsewhere. "Nothing changed, and here is how I know" earns
-the point in full when the reason follows.]
+Loosening the "single stated goal" wording to admit multi-file work cost me
+precision on `issue-01`-shaped cases: I re-ran that exact change as a canary with
+`--only issue-01,issue-05,issue-10` after the edit. `issue-01` flipped from `reject`
+to `accept` (correct — gold is `accept`), while `issue-05` (duplicate, gold
+`reject`) and `issue-10` (megaissue, gold `reject`) stayed `reject`, so the looser
+wording didn't drag in the two scope-family rejects sitting right next to it. What it
+still accepts that a stricter, single-file-only version would have caught for free:
+a multi-file change where each file's slice is individually fine but the *set* of
+files is actually two unrelated goals wearing one issue number — my check only
+looks for an explicit "these should be separate issues" framing or thread signals,
+not an implicit one, so a well-worded but genuinely two-goal issue could still slip
+through as accepted.
 
 ---
 
