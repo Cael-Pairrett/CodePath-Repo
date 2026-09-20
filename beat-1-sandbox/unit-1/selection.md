@@ -180,10 +180,6 @@ Graded on whether all three are answered, in your own words. Not on how good the
 reasoning is, and not on length — a short honest answer to each earns the full marks.
 This is also the basis for the claim comment you write in Unit 2.
 
-<!-- DRAFTED FOR REVIEW: written from a generic fit profile since I hadn't given
-specific notes. Read it, and edit anything that doesn't sound like me before
-submitting. -->
-
 **Selection rationale**
 
 1. I'm new to contributing to a codebase I didn't write, so a first issue that's

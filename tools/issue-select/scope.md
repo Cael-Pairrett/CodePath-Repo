@@ -36,11 +36,11 @@ you want to avoid. The skill uses this only to RANK the issues your
 rubric accepts, never to change a verdict: fit cannot rescue an issue
 your rubric rejects, and cannot sink one it accepts. -->
 
-New to open-source contribution. Comfortable with Python and everyday dev
-tooling (env files, README-style docs, basic git/GitHub workflow); less
-experience with this repo's FastAPI internals and its RAG/retrieval
-stack specifically. For a first issue I want to get the claim -> PR ->
-review loop right before taking on anything that requires deep
-familiarity with a subsystem I haven't touched yet, so I'd rather start
-with something config- or docs-shaped than a fix buried in retrieval or
-async test-mocking code.
+I've used Python, C++, Jupyter Notebook, and JavaScript, and I'm about to
+pick up R. What I most want to get better at is using AI in my actual
+workflow -- I think that matters more going forward than coding ability on
+its own. There's no topic or subsystem I want to avoid outright. For a
+first issue in a codebase I didn't write, though, I'd rather start with
+something small and unambiguous (a docs/config fix) to get the claim ->
+PR -> review loop right, before taking on this repo's less familiar
+internals like security or retrieval code.
