@@ -1,38 +1,34 @@
-## Summary
+## Plan-check: #64 — relevance scorer "partial overlap" fixture
 
-**Scope check:** Issue is `codepath/pathreview-ai301-fa26-s1#64`, matching `scope.md`'s repo line. In bounds.
+**Scope check:** issue lives in `codepath/pathreview-ai301-fa26-s1`, matches `scope.md`'s Repo line. Proceeding.
 
-**Policy/thread:** `docs/CONTRIBUTING.md` has no AI-disclosure requirement, and requires removing a seeded bug's `xfail(strict=True)` marker as part of the fix (which the plan already does). All other commenters on #64 (rishabhlingam, srithimahi, TianxinS) have `authorAssociation: NONE` — no maintainer direction or rejected approach exists to reconcile with.
+**Evidence gathered (live, from GitHub + repo):**
+- Issue #64 body: fixture gives full overlap, scorer's 1.0 is correct, fix the fixture.
+- Your repro comment (quoted in the plan): `assert 1.0 < 0.9`, `avg_score=1.0`.
+- `docs/CONTRIBUTING.md`: no AI-disclosure clause anywhere; does require removing the `xfail(strict=True)` marker when fixing a seeded bug, and specifies branch/commit conventions.
+- Thread: all commenters (you, rishabhlingam, srithimahi, TianxinS) have `authorAssociation: NONE` — no maintainer/collaborator has posted in the thread, so no maintainer direction or rejected approach exists to acknowledge. No open PR references #64. srithimahi posted a competing plan (3-of-4 chunk, score 0.75).
 
-**Repro evidence (student's own, comment `#issuecomment-5858903544`):** `--runxfail` → `assert 1.0 < 0.9`, log `avg_score=1.0 chunks_count=1 query_len=4`; default run → `18 passed, 1 xfailed`.
+### Checks
 
 | Check | Grade | Evidence |
 |---|---|---|
-| diagnosis-grounded | pass | Plan's cause (`RelevanceScorer.score()` correctly returns 1.0 for full 4/4 coverage) explains the repro's exact `avg_score=1.0`/`query_len=4` and matches the issue body verbatim; no contradiction. |
-| fixes-cause-not-symptom | pass | Change edits the fixture chunk text itself (the site the repro implicates), not the scorer or the band. |
-| scope-bounded | pass | Explicit "Out of scope" list (scorer, tokenizer, band, other tests, pyproject.toml, lint elsewhere); only action is the one fixture edit + required xfail removal. |
-| executable-by-stranger | pass | Names exact file/test and exact new chunk text (`"Django is a Python library for rapid development"`) and the xfail-removal line. |
-| test-plan-reruns-repro | pass | Re-runs both repro commands, states observable after-results (`PASSED`, `avg_score=0.5`, `19 passed`) that differ from repro's Actual. |
-| comment-fits-thread-and-policy | pass | No AI-disclosure duty in CONTRIBUTING.md; comment explicitly contrasts with `@srithimahi`'s 3-of-4 (0.75) plan rather than ignoring it; it's the author's own repro/plan, not a piggyback. |
-| comment-matches-plan (preferred) | pass | Comment's cause/change/scope match plan.md; no extra promises. |
-| risks-and-unknowns-honest (preferred) | pass | Names the whitespace-tokenization/punctuation risk and the "other students' plans differ" note; Deviations section matches the actual diff in `a544d35` exactly. |
+| diagnosis | pass | plan.md: "The bug is in the test fixture, not in `RelevanceScorer`" — names the mechanism (`_tokenize` + Jaccard-style overlap) and the exact code site (`rag/evaluator/relevance_scorer.py`). |
+| scope | pass | plan.md lists exactly one file/test to touch and an explicit "Out of scope" list (`relevance_scorer.py`, the band, other tests, `pyproject.toml`, lint). |
+| test | pass | plan.md Test plan: the fixed `test_query_with_partial_overlap`, with its `xfail(strict=True)` removed, becomes a real regression test that "runs in `make test-unit` and CI on every PR" — an automated test, not a manual-only step. |
+| comms | pass | No AI_POLICY file exists and CONTRIBUTING.md has no AI-disclosure clause, so none is owed. No maintainer direction or rejected approach exists in the thread to ignore. comment.md explicitly engages the one open peer plan: "@srithimahi's plan above uses a 3-of-4 chunk (0.75). I'm going with 2 of 4..." |
 
-**Voice guide:** No violations — leads with the observation, states one modest next step, no cheerleading or reserved-issue language, matches claim to artifact.
+**Voice guide (does not affect verdict):** comment.md leads with the repro result, ties the cause to the artifact, ends with one modest next step ("build this on `fix/64-partial-overlap-fixture`... and post the before/after output"), and relates to srithimahi's plan instead of repeating it. No rule violations found.
 
-Verdict: **accept** — every required check passes.
+All four required checks pass — this plan is ready to post and build from (and the build already matches it: your `Deviations` section in plan.md records only an environment substitution, not a scope change).
 
 ```json
 {
   "item": "https://github.com/codepath/pathreview-ai301-fa26-s1/issues/64",
   "checks": [
-    {"name": "diagnosis-grounded", "grade": "pass", "evidence": "Plan: 'RelevanceScorer.score() ... returns 1.0 for full keyword coverage' matches repro log 'avg_score=1.0 chunks_count=1 query_len=4' and issue body."},
-    {"name": "fixes-cause-not-symptom", "grade": "pass", "evidence": "Change edits only the fixture chunk in test_query_with_partial_overlap, the site the repro implicates; scorer untouched."},
-    {"name": "scope-bounded", "grade": "pass", "evidence": "Plan's 'Out of scope' list excludes scorer/tokenizer/band/other tests/pyproject.toml; Approach has only the one fixture edit plus required xfail removal."},
-    {"name": "executable-by-stranger", "grade": "pass", "evidence": "Names file tests/unit/test_relevance_scorer.py, test name, exact new chunk text, and 'delete the xfail decorator'."},
-    {"name": "test-plan-reruns-repro", "grade": "pass", "evidence": "Test plan reruns the same --runxfail command and the no-flag file run, expecting 'PASSED, avg_score=0.5' and '19 passed' vs repro's 'assert 1.0 < 0.9' / '18 passed, 1 xfailed'."},
-    {"name": "comment-fits-thread-and-policy", "grade": "pass", "evidence": "CONTRIBUTING.md has no AI-disclosure clause; comment says 'srithimahi's plan above uses a 3-of-4 chunk (0.75). I'm going with 2 of 4...'; comment is built from own repro, not piggybacked."},
-    {"name": "comment-matches-plan", "grade": "pass", "evidence": "comment.md's cause/change/scope restate plan.md with no added promises."},
-    {"name": "risks-and-unknowns-honest", "grade": "pass", "evidence": "Plan's Risks section names the whitespace-tokenize punctuation risk and parallel-branch note; Deviations section matches commit a544d35's actual diff exactly."}
+    {"name": "diagnosis", "grade": "pass", "evidence": "plan.md: 'The bug is in the test fixture, not in RelevanceScorer' with code-site mechanism in rag/evaluator/relevance_scorer.py"},
+    {"name": "scope", "grade": "pass", "evidence": "plan.md names test_relevance_scorer.py::test_query_with_partial_overlap as the only file touched and lists an explicit Out-of-scope section"},
+    {"name": "test", "grade": "pass", "evidence": "plan.md Test plan: fixed test becomes the automated regression test, runs in make test-unit and CI"},
+    {"name": "comms", "grade": "pass", "evidence": "No AI_POLICY/CONTRIBUTING disclosure clause exists; no maintainer direction in thread (all commenters NONE association); comment.md acknowledges srithimahi's competing plan by name"}
   ],
   "verdict": "accept"
 }

@@ -77,6 +77,15 @@ Out of scope:
 
 ## Test plan
 
+Automated test: the fixed `test_query_with_partial_overlap` in
+`tests/unit/test_relevance_scorer.py`, with its xfail marker removed, is
+the automated regression test for #64. It runs in `make test-unit` and
+CI on every PR. Before the fix it never ran as a real check (strict
+xfail). Afterward it fails if the fixture goes back to full overlap
+(score 1.0) or if the scorer stops returning a mid-band score for a
+2-of-4 match. I'm not adding a separate new test because the fixed
+one is exactly the case this issue is about.
+
 Re-run my Unit 2 repro commands against the branch:
 
 1. `.venv/bin/pytest tests/unit/test_relevance_scorer.py::TestRelevanceScorer::test_query_with_partial_overlap -v --runxfail`
