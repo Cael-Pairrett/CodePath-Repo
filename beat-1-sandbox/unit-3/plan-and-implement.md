@@ -19,7 +19,7 @@ Cael-Pairrett
 
 **Plan comment**
 
-PLAN_COMMENT_URL
+https://github.com/codepath/pathreview-ai301-fa26-s1/issues/64#issuecomment-5986314653
 
 Plan for #64, based on my repro above (`--runxfail` gives `E assert 1.0 < 0.9`, log `avg_score=1.0 ... query_len=4`).
 
