@@ -127,3 +127,14 @@ the machine I built on, so for step 3 I ran the command the Makefile's
 ruff and black directly on the touched file. That doesn't change the
 fix or what the plan comment says. CI on the PR will run the real
 `make` targets.
+
+Update for the PR (Unit 4, 2026-10-11): `make` is now installed on the
+machine I build on, so before opening the PR I ran the four real
+targets the PR template lists on the branch at `a544d35`:
+`make test-unit` (376 passed, 52 xfailed), `make lint` (all checks
+passed), `make typecheck` (no issues in 76 source files), and
+`make test-integration` (stops with "no tests ran" because Path Review
+has no integration tests yet). The output is in `test_evidence.md` and
+the PR description. The xfail marker was removed in the same commit as
+the fixture change, and `pyproject.toml` has no suppression for #64.
+None of this changes the fix.
