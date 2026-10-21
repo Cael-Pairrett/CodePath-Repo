@@ -55,10 +55,9 @@ happened; these entries are the toolkit's own timeline.
 All four entries are graded. Keep every heading below, and fill each
 one in the week it belongs to.
 
-**Unit 5: [one line on the tool work]**
+**Unit 5: Turned my unit 1 issue-select skill into issue-scout and wrote my own search strategy.**
 
-[2-4 sentences: what you built (the scout, your strategy), what broke
-or fell short, what changed because of it.]
+I installed the scout over my unit 1 skill, updated my fit profile, and wrote two `gh search issues` queries (Python data issues and Python docs issues) with ranking rules that put bug and docs labels first and the fewest comments first. My first scan accepted all five issues it graded, but four came from one brand-new repo, and the read-out showed my queries were broken: I had put the search filters in one quoted string, so gh ignored my `created:`, `comments:` and `-linked:pr` filters. I split each filter into its own argument, added a limit of two results per repo, and added a rule to my rubric that a repo has to be at least 60 days old, because one day of commits was passing as "in use". I ran out of course credit before I could re-scan or grade my picks, so so far I've only checked the fixed queries by running them by hand.
 
 **Unit 6: [one line on the tool work]**
 
