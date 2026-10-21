@@ -1,4 +1,4 @@
-# Contribution: [Issue Title]
+# Contribution: Cookbook: --json recipes with jq
 
 Path: `beat-2-contribution/contribution-story.md`
 
@@ -8,10 +8,9 @@ format criteria grade exactly that. Your course repo link is the whole submissio
 files and no evidence uploads are part of Assignment 5.
 
 **Contribution Number:** [1]
-**Student:** [Student name]
-**GitHub Username:** [your GitHub username, exactly as it appears on your profile - no @, no
-profile URL. Your comments upstream are identified by this name.]
-**Issue:** [GitHub issue link]
+**Student:** Cael Pairrett
+**GitHub Username:** Cael-Pairrett
+**Issue:** https://github.com/devdavidejesus/btc-toolkit/issues/63
 **Pull Request:** [GitHub PR link, once opened]
 
 One repository, built across units 5 to 8, telling the whole story of your real
@@ -59,11 +58,9 @@ one in the week it belongs to.
 
 I installed the scout over my unit 1 skill, updated my fit profile, and wrote two `gh search issues` queries (Python data issues and Python docs issues) with ranking rules that put bug and docs labels first and the fewest comments first. My first scan accepted all five issues it graded, but four came from one repo created that day, because I had put my search filters in one quoted string and gh ignored them; I split the filters into separate arguments, capped results at two per repo, and added a rule to my rubric that a repo must be at least 60 days old. The second scan rejected the two too-new repos it found, but my first query still lets brand-new issues through, and when I graded my picks the bounded-scope check rejected tongs#328 for being two parts after the scan had passed it, so my next fixes are splitting that query and making bounded-scope clear about multi-part issues.
 
-**Unit 6: [one line on the tool work]**
+**Unit 6: Installed the voice guard with my own Upstream rules and wrote a CLAUDE.local.md for btc-toolkit.**
 
-[2-4 sentences: the voice-guard, the repo-memory file. What broke or
-fell short, and what changed because of it. "Nothing broke" counts when
-it is true - say how you know.]
+I folded my three voice-guide copies into one guide, added Upstream rules for claims, questions, and pings, and installed the voice-guard hook; the wiring test was stopped with "no body the guard can read", which is the pass. My claim draft passed the guard on the first check, but repro-check pointed out it said two recipes "both work" with no output behind it, so I added the actual numbers. I also wrote a 32-line CLAUDE.local.md for my btc-toolkit fork from one scoped read of docs/json-schema.md and the README, and kept it out of git with .git/info/exclude.
 
 **Unit 7: [one line on the tool work]**
 
@@ -79,24 +76,18 @@ drafted, what you did with the draft.]
 
 ## Why I Chose This Issue
 
-[1-2 paragraphs in your own words: how you searched, what your scan
-surfaced, what your scout's verdict said, why this issue fits your
-profile, and what you hope to learn. If your scout's verdict on it
-was reject and you chose it anyway, say so here and say why; choosing
-against your own tool silently is what loses points. Close with an
-honest read of the tool itself: where the scout fell short on a real
-wild search and what you changed or would change, or what convinced
-you it held up. **Record the link to your claim comment in this section too.**
-Not claimed yet? Write `claim pending` and today's date where the link goes,
-and add the link the moment your claim lands.]
+This issue came from my own scout scan, not the Issue Selection site, because the site needs a browser sign-in I didn't use. My second scan (after I fixed my queries) surfaced btc-toolkit #63 from my Python data/JSON query, and when I graded it with `issue-scout: grade` after this week's scope patch, it was accepted on all five required checks and both preferred ones, with a difficulty note of straightforward: the issue names the file to add and the JSON keys to use. It fits my profile because it's a small, clear docs change in a Python CLI, and the work is writing jq recipes over JSON output, which is close to the data work I do in my analytics classes. I hope to learn the full claim, PR, and review loop on a real repo with strict CI, and to get better at jq. Nobody had commented on or been assigned to the issue when I read the full thread.
+
+My scout was useful but needed real fixes. My first scan accepted five issues, four from a repo created that day, because my search filters were in one quoted string and gh ignored them. I fixed the queries and added a 60-day repo-age rule. Then my bounded-scope check gave two different answers on tongs#328, so this week I replaced it with scope-feasible, which only rejects umbrella issues and gives a difficulty note instead. One weakness is still open: my first query still lets brand-new issues through, and the scout can't tell when an owner labels every issue "good first issue".
+
+**Claim comment:** claim pending (2026-10-21)
 
 **Toolkit**
 
-- Tool: issue-scout (your scout: your search strategy, your rubric),
-  and how you used it
-- What it produced: [the scan and its verdict on this issue, described]
-- Difficulties: [where it fell short, or "none met" if none did]
-- What changed: [what you patched or would update, or "nothing"]
+- Tool: issue-scout (my search strategy and rubric). I ran two scans and then graded my picks directly with `issue-scout: grade`.
+- What it produced: scan 2 surfaced #63 from my Python JSON query, and the Unit 6 re-grade accepted it with every required and preferred check passing and a "straightforward" difficulty note.
+- Difficulties: my first queries didn't apply their filters, and bounded-scope rejected tongs#328 for having two parts after the scan had passed it.
+- What changed: I split the query filters into separate arguments, added a 60-day repo-age rule to repo-in-use, and replaced bounded-scope with scope-feasible plus a difficulty note.
 
 ---
 
@@ -131,31 +122,50 @@ and add the link the moment your claim lands.]
 
 **Environment Setup**
 
-[What a stranger would need to stand this up: your operating system,
-the relevant versions (language, runtime, package manager, the project
-itself), and how you set the project up. Then the challenges you faced
-and how you solved them, or that none came up.]
+Debian Linux, Python 3.13.5, jq-1.7, and btc-toolkit 1.8.1 at upstream `main` 55b9e19 (2026-10-19). I forked the repo with `gh repo fork devdavidejesus/btc-toolkit`, cloned my fork, and ran the tool with `python3 -m btc_toolkit` from the clone root, since it has no runtime dependencies. The recipes query mainnet through the tool's default public API. My first try at a venv install failed because the box has no ensurepip, so I ran the module directly instead. One address I tried returned an API 400, so I used a different public address for the utxo recipe.
 
 **Steps to Reproduce**
 
-1. [Step 1]
-2. [Step 2]
-3. [Observed result]
+1. Clone the fork at 55b9e19 and run `ls docs/`, `ls docs/cookbook.md`, and `grep -n cookbook README.md`.
+2. Run the issue's fee-rate recipe: `echo a1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d | python3 -m btc_toolkit tx - --json | jq -r '.fee_rate_sat_vb // empty'`.
+3. Run the issue's utxo recipe on `17SkEw2md5avVNyYgj6RiXuQKNwkXaxFyQ`, and again on `bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h`.
+4. Observed result: there is no `docs/cookbook.md` and the README only mentions the cookbook in its roadmap line, so the gap is real. The recipes return real output (4191.36 and 1935301). When the API returns an error object, the utxo recipe fails in jq.
 
 **Reproduction Evidence**
 
-- **Commit showing reproduction:** [link to commit in your fork]
-- **Screenshots/logs:** [if applicable]
-- **My findings:** [what you discovered during reproduction; an
-  honest, evidenced cannot-reproduce that led you to re-pick or ask
-  the maintainer belongs here and costs you nothing]
+- **Commit showing reproduction:** none
+- **Screenshots/logs:**
+
+```
+$ ls docs/
+json-schema.md
+python-api.md
+releases.md
+$ ls docs/cookbook.md
+ls: cannot access 'docs/cookbook.md': No such file or directory
+$ grep -n cookbook README.md | cut -c1-160
+452:The original roadmap shipped in v1.0.0; every release since is in the [CHANGELOG](https://github.com/devdavidejesus/btc-toolkit/blob/main/CHANGELOG.md). Wha
+$ echo a1075db55d416d3ca199f55b6084e2115b9345e16c5cf302fc80e9d5fbf5d48d | python3 -m btc_toolkit tx - --json | jq -r '.fee_rate_sat_vb // empty'
+4191.36
+$ python3 -m btc_toolkit utxo 17SkEw2md5avVNyYgj6RiXuQKNwkXaxFyQ --json | jq '[.utxos[] | select(.value_sats > 10000) | .value_sats] | add'
+1935301
+$ python3 -m btc_toolkit utxo bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h --json
+{
+  "error": "API error 400: Bad Request",
+  "address": "bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h"
+}
+$ python3 -m btc_toolkit utxo bc1qm34lsc65zpw79lxes69zkqmk6ee3ewf0j77s3h --json | jq '[.utxos[] | select(.value_sats > 10000) | .value_sats] | add'
+jq: error (at <stdin>:4): Cannot iterate over null (null)
+```
+
+- **My findings:** The gap the issue describes is real on today's `main`. The example recipes work on mainnet, but `.utxos[]` breaks with "Cannot iterate over null" when the tool returns an error object, so my cookbook should use `.utxos[]?` the way the issue's opreturn example already uses `.outputs[]?`.
 
 **Toolkit**
 
-- Tool:
-- What it produced:
-- Difficulties:
-- What changed:
+- Tool: repro-check, with the wild scope installed this week. I graded my claim draft alone, then my claim and repro report together.
+- What it produced: an accept on the claim alone, then an accept with all seven required checks passing on the claim and report together.
+- Difficulties: the first joint check said my evidence block looked retyped (shortened txids, `btc-toolkit` instead of `python3 -m btc_toolkit`, a comment inside the code block), and it flagged that I called the address "busy" with nothing to show that.
+- What changed: I re-ran every command and pasted the raw output, recorded my jq version, and cut "busy". The re-check passed with no fixes listed.
 
 ---
 
