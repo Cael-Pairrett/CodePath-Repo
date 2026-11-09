@@ -107,7 +107,10 @@ My scout was useful but needed real fixes. My first scan accepted five issues, f
 
 **Affected Components**
 
-[Which parts of the codebase are involved?]
+- `docs/cookbook.md` (new file)
+- `README.md`, Scripting section (the link next to the `docs/json-schema.md` link)
+- `CHANGELOG.md`, `[Unreleased]`
+- `docs/json-schema.md` (read only: the source of every key the recipes use)
 
 **Toolkit**
 
@@ -183,12 +186,14 @@ deliberately NOT changing.]
 
 **Implementation Plan**
 
-1. [Modify file X to do Y]
-2. [Add or change Z]
-3. [Update tests]
+1. Add `docs/cookbook.md` with 5-8 recipes, each a command, one line on the question it answers, and one real mainnet sample output, using only keys from `docs/json-schema.md`.
+2. Link the page from the README next to the `docs/json-schema.md` link, and add a line under `[Unreleased]` in `CHANGELOG.md`.
+3. No test changes: CONTRIBUTING.md asks for tests on code changes, and this change has no code.
 
-[Record deviations here as they happen: what changed mid-build and
-why. A recorded deviation is honest work; silent drift is not.]
+Deviations:
+
+- 2026-11-09: rebuilt on upstream `main` f7d48e4 instead of 55b9e19. Upstream rewrote the README in #83, so the link went into the Scripting section instead of Automation.
+- 2026-11-09: eight recipes, the top of the 5-8 range.
 
 **Toolkit**
 
@@ -220,13 +225,17 @@ observable named is not a strategy.]
 [A running log, added to as you work. Date each entry. What you
 built, decisions you made when you made them, wrong turns included.]
 
-**[Date]**
+**2026-10-21**
 
-[Entry]
+Forked devdavidejesus/btc-toolkit, cloned the fork, and reproduced the gap at 55b9e19: no `docs/cookbook.md`, and `.utxos[]` fails in jq with "Cannot iterate over null" on an address the API returns an error for.
 
-**[Date]**
+**2026-11-09**
 
-[Entry]
+Installed the ship-gate and wrote `ship-manifest.md` (five checks from CONTRIBUTING.md and `.github/workflows/tests.yml`; fuzzer and CodeQL excluded with a dated reason). Branched `docs/63-jq-cookbook` from upstream `main` f7d48e4 and committed `docs/cookbook.md`, the README link and the CHANGELOG line as 3a1bc7c. Ran all eight recipes on mainnet, the test suite (306 tests, OK), coverage (96%), ruff and mypy --strict; all passed. The ship-gate passed on the branch.
+
+**2026-11-09**
+
+The push of `docs/63-jq-cookbook` to my fork was rejected because the upstream commits it carries change `.github/workflows/` files and my GitHub token has no `workflow` scope. The fork's `main` needs a sync before the branch can go up.
 
 **Toolkit**
 
@@ -282,10 +291,8 @@ Toolkit blocks above are full of them.]
 
 ## Resources Used
 
-[What actually helped, not a reading list. List things this story
-already shows you using: the doc you followed to set the environment
-up, the thread that explained the bug, the person who answered you.
-One real entry beats ten plausible ones.]
-
-- [Link to documentation that helped]
-- [Discussion, issue, or post that helped]
+- [btc-toolkit issue #63](https://github.com/devdavidejesus/btc-toolkit/issues/63): the recipe examples and the "Done when" line
+- [btc-toolkit CONTRIBUTING.md](https://github.com/devdavidejesus/btc-toolkit/blob/main/CONTRIBUTING.md): branch from `main`, the CHANGELOG rule, and "Claims are verifiable"
+- [docs/json-schema.md](https://github.com/devdavidejesus/btc-toolkit/blob/main/docs/json-schema.md): every key the recipes use, the error object shape, and exit codes
+- [btc-toolkit tests workflow](https://github.com/devdavidejesus/btc-toolkit/blob/main/.github/workflows/tests.yml): the exact test, coverage, ruff and mypy commands
+- [jq manual](https://jqlang.org/manual/): `[]?`, `// empty` and `@tsv`
