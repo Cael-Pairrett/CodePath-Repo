@@ -11,7 +11,7 @@ files and no evidence uploads are part of Assignment 5.
 **Student:** Cael Pairrett
 **GitHub Username:** Cael-Pairrett
 **Issue:** https://github.com/devdavidejesus/btc-toolkit/issues/63
-**Pull Request:** [GitHub PR link, once opened]
+**Pull Request:** https://github.com/devdavidejesus/btc-toolkit/pull/84
 
 One repository, built across units 5 to 8, telling the whole story of your real
 contribution. Fill it as you work, not at the end — the sections below ask for evidence that
@@ -248,7 +248,7 @@ The push of `docs/63-jq-cookbook` to my fork was rejected because the upstream c
 
 ## Pull Request
 
-**PR Link:** [GitHub PR URL when opened]
+**PR Link:** https://github.com/devdavidejesus/btc-toolkit/pull/84
 
 **PR Description:** [what the PR says; much of the content above
 adapts into it]
@@ -258,9 +258,7 @@ adapts into it]
 - 2026-11-09: on the issue thread, the maintainer accepted my claim ("Thanks, it's yours, and Sunday works") and asked for four things in the PR: a link in the `docs/commands.md` index, one recipe that filters errors with `select(has("error"))` and mentions exit codes 1 and 2, old confirmed txids and addresses so the outputs stay the same, and a line under `## [Unreleased]` in `CHANGELOG.md`.
 - 2026-11-09: commit 65c8970 added the `docs/commands.md` link, changed the failed-items recipe to `select(has("error"))` with exit codes 1 and 2 (its input now includes `not-a-txid`, so the batch exits 2), moved the balance and UTXO recipes to addresses unused since 2011 and 2012, and replaced the `fees` recipe with `tx --outputs` on the pizza transaction. The CHANGELOG line was already in 3a1bc7c.
 
-**Status:** [Awaiting review / Iterating / Merged / Closed. The
-status is a fact you record, never a grade: the PR is graded as
-opened.]
+**Status:** Awaiting review
 
 **Toolkit**
 
