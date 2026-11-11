@@ -27,7 +27,7 @@ as a deleted answer.
 the unused `[Tool name]` entry stub, its copy-me sentence, and the prompt sentences under
 each header. A leftover bracketed prompt reads as unfilled.
 
-**Student:** [Student name]
+**Student:** Cael Pairrett
 
 ## Featured Tools
 
