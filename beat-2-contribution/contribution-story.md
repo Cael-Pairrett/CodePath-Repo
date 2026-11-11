@@ -64,13 +64,11 @@ I folded my three voice-guide copies into one guide, added Upstream rules for cl
 
 **Unit 7: [one line on the tool work]**
 
-[2-4 sentences: the ship-gate and your gate manifest. What it produced
-on your real branch, what fought you, what changed because of it.]
+On Nov 9 the first ship-gate run (5:11 PM CST) passed all five repo checks. It still blocked because my pr-precheck couldn't finish: claude exited 1: Not logged in · Please run /login. The gate removes ANTHROPIC_API_KEY so it can use a subscription login, so for that run I passed the key in through a wrapper. Run 2 (5:16 PM CST) then passed all 9 pr-precheck checks, including a re-run of the utxo repro. Afterward I cut my manifest from 5 must-pass rows to 4 (setup, tests under coverage, ruff, mypy) to fit the 2–4 rule. The Atheris fuzzer and the CodeQL/OS matrix stayed in the excluded table, each with a dated reason.
 
 **Unit 8: [one line on the tool work]**
 
-[2-4 sentences: the PR-monitor and your playbook. What it read, what it
-drafted, what you did with the draft.]
+My PR monitor reads the PR on GitHub using only read-only gh calls: CI checks, reviews, comments, days of quiet, mergeability, and whether it's merged or closed. It writes a draft of my next move to a file and never posts anything. When the maintainer's review came in on PR #84, the full monitor run failed with "Not logged in," so I followed my playbook's rules myself. Those rules say to push every requested change as one update before replying, and never to argue a maintainer's style or scope call. My reply should list what I changed in the order the points were raised, and I can't say "fixed" without a commit SHA. I made both changes in one commit and replied "Thanks, both done in 186ee49," followed by a list of each change.
 
 ---
 
@@ -95,15 +93,15 @@ My scout was useful but needed real fixes. My first scan accepted five issues, f
 
 **Problem Description**
 
-[In your own words, what is broken or missing?]
+Issue #63 asked for a docs/cookbook.md page of 5–8 copy-paste --json + jq recipes, but btc-toolkit had no such page. Nothing showed how to script its JSON output, and nothing checked that a recipe used real commands or documented keys.
 
 **Expected Behavior**
 
-[What should happen?]
+Each recipe is a command plus one line on the question it answers. It uses only keys documented in docs/json-schema.md, runs against mainnet, and shows real sample output. The README links to the page.
 
 **Current Behavior**
 
-[What actually happens?]
+When I ran the issue's own utxo example on an address the API refuses, btc-toolkit returned an error object with no utxos field. Then jq '[.utxos[] | ...]' crashed with jq: error (at <stdin>:4): Cannot iterate over null (null). I got the same result on Oct 21 and again on Nov 9.
 
 **Affected Components**
 
@@ -176,13 +174,11 @@ jq: error (at <stdin>:4): Cannot iterate over null (null)
 
 **Analysis**
 
-[Your analysis of the root cause: what is causing the issue, traced
-to the files and functions involved.]
+The root cause was that the recipe iterated .utxos[], a field that's null when the command returns an error object. Plain [] fails on null, while []? skips it, which is what the issue's opreturn example already did.
 
 **Proposed Solution**
 
-[High-level description of your fix approach, and what you are
-deliberately NOT changing.]
+I wrote a cookbook doc because that's what the issue asked for. I added a test because docs drift quietly: a renamed flag or a misspelled key would break a recipe and nobody would notice. tests/test_cookbook.py checks every recipe against the real CLI and docs/json-schema.md, so the cookbook stays correct as the project changes, even though CONTRIBUTING only requires tests for code changes.
 
 **Implementation Plan**
 
@@ -206,10 +202,14 @@ Deviations:
 
 ## Testing Strategy
 
-[What observable checks prove the fix: your reproduction steps re-run
-against the built change (before and after), and the repo's own test
-suite or checks with the outcome shown. "Tests pass" with nothing
-observable named is not a strategy.]
+I re-ran the failing repro. The old filter still gave Cannot iterate over null, and the []? version printed null and exited with code 0. Then I added tests/test_cookbook.py, an offline unittest with 4 tests:
+
+- each recipe has one command block and one sample output
+- each uses a real btc-toolkit command and real flags with --json
+- each reads only documented keys
+- the README and docs/commands.md both link to the page
+
+It also requires at least 5 recipes. The test fails on upstream main (docs/cookbook.md is missing) and fails if I change a key to .fee_rate. It passes on my branch. The full suite ran 310 tests with no failures at 96% coverage, ruff and mypy --strict were clean, and every CI check on the final PR passed.
 
 **Toolkit**
 
@@ -222,9 +222,6 @@ observable named is not a strategy.]
 
 ## Implementation Notes
 
-[A running log, added to as you work. Date each entry. What you
-built, decisions you made when you made them, wrong turns included.]
-
 **2026-10-21**
 
 Forked devdavidejesus/btc-toolkit, cloned the fork, and reproduced the gap at 55b9e19: no `docs/cookbook.md`, and `.utxos[]` fails in jq with "Cannot iterate over null" on an address the API returns an error for.
@@ -236,6 +233,18 @@ Installed the ship-gate and wrote `ship-manifest.md` (five checks from CONTRIBUT
 **2026-11-09**
 
 The push of `docs/63-jq-cookbook` to my fork was rejected because the upstream commits it carries change `.github/workflows/` files and my GitHub token has no `workflow` scope. The fork's `main` needs a sync before the branch can go up.
+
+**Nov 9**
+
+I committed the cookbook as 3a1bc7c at 5:06 PM CST. The push to my fork was rejected because GitHub won't let an OAuth app update .github/workflows/codeql.yml without the workflow scope. I synced my fork with upstream and pushed again without force. After the maintainer assigned me the issue and left four notes, I added the test (77959ba) and the follow-ups (65c8970). I opened PR #84 at 6:45 PM CST.
+
+**Nov 10**
+
+The maintainer (@devdavidejesus) asked for two changes in a comment from 6:57 PM CST the night before, and he merged main into my branch that morning. In 186ee49 (1:38 PM CST) I removed the 8-recipe cap from test_recipes_are_well_formed and kept the 5-recipe minimum. I also reworded the "old address" line: transaction outputs never change, but address outputs "should rarely change," since anyone can still send coins to an old address. Then I replied on the PR with the SHA.
+
+**Nov 10, about 7:50 PM CST**
+
+He approved with "Thanks for the quick follow-up, both changes look good. Merging." He merged PR #84 into main and closed #63 as completed.
 
 **Toolkit**
 
@@ -250,15 +259,14 @@ The push of `docs/63-jq-cookbook` to my fork was rejected because the upstream c
 
 **PR Link:** https://github.com/devdavidejesus/btc-toolkit/pull/84
 
-**PR Description:** [what the PR says; much of the content above
-adapts into it]
+**PR Description:** From the PR's "What and why": "Adds `docs/cookbook.md`, a page of eight `--json` recipes with `jq`, as asked in #63. Each recipe is a command and one line on the question it answers, uses only keys documented in `docs/json-schema.md`, and has a real mainnet sample output under it (run 2026-11-09 with v1.8.2 and jq 1.7). The page is linked from the README's Scripting section and from the index at the top of `docs/commands.md`, and `CHANGELOG.md` has an entry under `## [Unreleased]`." Full description: https://github.com/devdavidejesus/btc-toolkit/pull/84
 
 **Maintainer Feedback:**
 
 - 2026-11-09: on the issue thread, the maintainer accepted my claim ("Thanks, it's yours, and Sunday works") and asked for four things in the PR: a link in the `docs/commands.md` index, one recipe that filters errors with `select(has("error"))` and mentions exit codes 1 and 2, old confirmed txids and addresses so the outputs stay the same, and a line under `## [Unreleased]` in `CHANGELOG.md`.
 - 2026-11-09: commit 65c8970 added the `docs/commands.md` link, changed the failed-items recipe to `select(has("error"))` with exit codes 1 and 2 (its input now includes `not-a-txid`, so the batch exits 2), moved the balance and UTXO recipes to addresses unused since 2011 and 2012, and replaced the `fees` recipe with `tx --outputs` on the pizza transaction. The CHANGELOG line was already in 3a1bc7c.
 
-**Status:** Awaiting review
+**Status:** Merged into `main` on 2026-11-10 (about 7:50 PM CST); #63 closed as completed.
 
 **Toolkit**
 
@@ -273,16 +281,15 @@ adapts into it]
 
 **Technical Skills Gained**
 
-[What you learned technically, named concretely.]
+In jq, .field[] fails on null but .field[]? skips it. That matters most with a CLI's error objects. I also learned to build on top of a maintainer's merge commit on my branch rather than rewriting history or force-pushing over his work.
 
 **Challenges Overcome**
 
-[What was hard and how you solved it; point at the real events, the
-Toolkit blocks above are full of them.]
+My local main was stale, still at Oct 21's 55b9e19. So the git diff main...HEAD the gate collected for run 2 included about 30 upstream files that weren't mine. It still graded my one real commit, but I had to reset local main to upstream. The lesson is that the gate trusts whatever base ref I have locally. The workflow-scope push rejection was also confusing until I figured out it was because my fork was out of date.
 
 **What I'd Do Differently Next Time**
 
-[Reflection on your process.]
+My tools caught real problems before a maintainer did. The gate blocked on a placeholder "TODO" line, plan-check pushed me to add a test, and the voice guard flagged a claim with no check-in date. Because I'd written the playbook ahead of time, I knew how to answer the review as soon as it came in, even though the monitor itself couldn't run. Next time I'll check my logins and my local main before the first gate run.
 
 ---
 
