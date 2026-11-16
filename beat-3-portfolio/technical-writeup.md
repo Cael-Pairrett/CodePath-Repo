@@ -39,6 +39,7 @@ def test_recipes_are_well_formed(self) -> None:
         ...
 
 After
+
 def test_recipes_are_well_formed(self) -> None:
     recipes = _recipes()
     self.assertGreaterEqual(len(recipes), 5)
