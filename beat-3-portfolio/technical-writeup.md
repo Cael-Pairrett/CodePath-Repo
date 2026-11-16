@@ -37,11 +37,30 @@ def test_recipes_are_well_formed(self) -> None:
     self.assertLessEqual(len(recipes), 8)
     for recipe in recipes:
         ...
+After (186ee49):
 
-After
-
+Python
 def test_recipes_are_well_formed(self) -> None:
     recipes = _recipes()
     self.assertGreaterEqual(len(recipes), 5)
     for recipe in recipes:
         ...
+Wording change in docs/cookbook.md:
+
+Before: "...an address with no activity since 2011 or 2012, so the outputs stay the same."
+
+After: "...an address with no activity since 2011 or 2012. Transaction outputs stay the same. Address outputs should rarely change, but anyone can still send coins to an old address."
+
+The maintainer then approved and merged the PR.
+
+Limitations and what's next
+The tests in tests/test_cookbook.py check that each recipe is formatted correctly, uses a real command and flags, and only references keys documented in docs/json-schema.md. They parse the markdown offline and never actually run the recipes against live mainnet data. Sample outputs were captured once on 2026-11-09 and treated as stable. My automated PR monitor also failed with “Not logged in” right when the review arrived, so I had to reply by hand.
+
+Next I would add a small optional integration check that can re-run the recipes against the public API when a network is available, and I would fix the monitor login so the next review is caught automatically.
+
+Links
+Issue: [github.com/devdavidejesus/btc-toolkit/issues/63](https://github.com/devdavidejesus/btc-toolkit/issues/63)
+PR: [github.com/devdavidejesus/btc-toolkit/pull/84](https://github.com/devdavidejesus/btc-toolkit/pull/84)
+Cookbook: [github.com/devdavidejesus/btc-toolkit/blob/main/docs/cookbook.md](https://github.com/devdavidejesus/btc-toolkit/blob/main/docs/cookbook.md)
+Tests: [github.com/devdavidejesus/btc-toolkit/blob/main/tests/test_cookbook.py](https://github.com/devdavidejesus/btc-toolkit/blob/main/tests/test_cookbook.py)
+Fix commit: [github.com/devdavidejesus/btc-toolkit/commit/186ee4939ceaae118bb461ddcc89e7eccec2888b](https://github.com/devdavidejesus/btc-toolkit/commit/186ee4939ceaae118bb461ddcc89e7eccec2888b)
